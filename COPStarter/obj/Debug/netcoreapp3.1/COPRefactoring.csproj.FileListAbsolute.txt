@@ -1,0 +1,9 @@
+C:\code\CoP\COPRefactoring\COPStarter\bin\Debug\netcoreapp3.1\COPRefactoring.deps.json
+C:\code\CoP\COPRefactoring\COPStarter\bin\Debug\netcoreapp3.1\COPRefactoring.dll
+C:\code\CoP\COPRefactoring\COPStarter\bin\Debug\netcoreapp3.1\COPRefactoring.pdb
+C:\code\CoP\COPRefactoring\COPStarter\obj\Debug\netcoreapp3.1\COPRefactoring.csprojAssemblyReference.cache
+C:\code\CoP\COPRefactoring\COPStarter\obj\Debug\netcoreapp3.1\COPRefactoring.csproj.CoreCompileInputs.cache
+C:\code\CoP\COPRefactoring\COPStarter\obj\Debug\netcoreapp3.1\COPRefactoring.AssemblyInfoInputs.cache
+C:\code\CoP\COPRefactoring\COPStarter\obj\Debug\netcoreapp3.1\COPRefactoring.AssemblyInfo.cs
+C:\code\CoP\COPRefactoring\COPStarter\obj\Debug\netcoreapp3.1\COPRefactoring.dll
+C:\code\CoP\COPRefactoring\COPStarter\obj\Debug\netcoreapp3.1\COPRefactoring.pdb
