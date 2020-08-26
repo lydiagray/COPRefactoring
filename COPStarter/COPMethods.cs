@@ -78,7 +78,7 @@ namespace COPRefactoring
             result.TotalCapitalLetters = totalUpperCaseLetters;
 
 
-            // LetterOccurrences
+            // WordsFirstToLast
             var reversedWordArray = new string[inputAsWordArray.Length];
             for (var i = 1; i <= inputAsWordArray.Length; i++)
             {
@@ -92,6 +92,7 @@ namespace COPRefactoring
             reversedWordString += reversedWordArray[reversedWordArray.Length - 1];
             result.WordsLastToFirst = reversedWordString;
 
+            // LetterOccurrences
             var letterOccurrences = new List<LetterOccurrence>();
             var alphabet = "abcdefghijklmnopqrstuvwxyz";
             for (var i = 0; i < alphabet.Length; i++)
