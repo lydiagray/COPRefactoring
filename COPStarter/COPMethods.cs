@@ -1,23 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 
 namespace COPRefactoring
 {
-	public class COPMethods
+    public class COPMethods
 	{
         // The challenge (turn Resharper off if you have it installed)
+        // You can work individually, or in pairs if you prefer
         // This is terrible code. Your task is to make it better
-        // The Analyse method takes a string input and outputs a ResultModel object that has done various things with the input
-        // There are unit tests that already pass, you don't need to change these, just make sure they still pass when you're done
-        // When you're happy with your refactor, push your changes to a branch with your name and we'll review the changes in the next session
+        // The Analyse method takes a string input and outputs a ResultModel object.
+        // The Analyse method does various things with the input to create the ResultModel object.
+        // The Analyse method must remain and return the same object, but you can abstract the logic into private methods/classes if you want to.
+        // There are unit tests that already pass, you don't need to change these, just make sure they still pass when you're done.
+        // When you're happy with your refactor, push your changes to a branch with your name and we'll review the changes in another session.
 
         public ResultModel Analyse(string input)
         {
             var result = new ResultModel();
 
+            // Total words
             var inputAsWordArray = input.Split(" ");
             var totalWords = 0;
             foreach (var word in inputAsWordArray)
@@ -27,6 +29,8 @@ namespace COPRefactoring
             }
             result.TotalWords = totalWords;
 
+
+            // Total letters
             var regex = new Regex("[a-zA-Z]");
             var inputArray = input.ToCharArray();
             var totalLetters = 0;
@@ -40,6 +44,7 @@ namespace COPRefactoring
             }
             result.TotalLetters = totalLetters;
 
+            // TotalWordsWithMoreThanFiveLetters
             var totalWordsWithMoreThanFiveLetters = 0;
             for (var i = 0; i < inputAsWordArray.Length; i++)
             {
@@ -59,7 +64,7 @@ namespace COPRefactoring
 
 
 
-
+            // TotalCapitalLetters
             var upperCaseRegex = new Regex("[A-Z]");
             var totalUpperCaseLetters = 0;
             foreach (var letter in inputArray)
@@ -73,6 +78,7 @@ namespace COPRefactoring
             result.TotalCapitalLetters = totalUpperCaseLetters;
 
 
+            // LetterOccurrences
             var reversedWordArray = new string[inputAsWordArray.Length];
             for (var i = 1; i <= inputAsWordArray.Length; i++)
             {
@@ -125,6 +131,7 @@ namespace COPRefactoring
 
             result.LetterOccurrences = letterOccurrences;
 
+            // RepeatedWords
             var repeatedWords = new List<RepeatedWord>();
             var punctuationRegex = new Regex("[.,!?:;\"']");
             foreach (var word in inputAsWordArray)
@@ -152,6 +159,7 @@ namespace COPRefactoring
             result.RepeatedWords = repeatedWords;
 
 
+            // CodedWord
             var numbers = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26";
             var alphabetString = "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z";
             var numbersAsArray = numbers.Split(",");
