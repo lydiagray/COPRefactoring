@@ -136,17 +136,9 @@ namespace COPRefactoring
         // CodedWord
         private string GetCodedWord(string input)
         {
-            var numbers = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26";
-            var alphabetString = "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z";
-            var numbersAsArray = numbers.Split(",");
-            var alphabetAsArray = alphabetString.Split(",");
-            var code = new Dictionary<string, int>();
-
-            foreach (var number in numbersAsArray)
-            {
-                var numberAsInt = int.Parse(number);
-                code.Add(alphabetAsArray[numberAsInt - 1], numberAsInt);
-            }
+            var numbers = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26".Split(",");
+            var alphabetString = "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z".Split(",");
+            var code = numbers.Select(number => int.Parse(number)).ToDictionary(numberAsInt => alphabetString[numberAsInt - 1]);
 
             var inputAsCharArray = input.ToLower().ToCharArray();
             var codeResult = "";
@@ -157,13 +149,7 @@ namespace COPRefactoring
                 if (!alphabetRegex.IsMatch(character.ToString()))
                     codeResult += character.ToString();
 
-                foreach (var pair in code)
-                {
-                    if (pair.Key.Equals(character.ToString()))
-                    {
-                        codeResult += pair.Value.ToString();
-                    }
-                }
+                codeResult = code.Where(pair => pair.Key.Equals(character.ToString())).Aggregate(codeResult, (current, pair) => current + pair.Value);
             }
 
             return codeResult;
