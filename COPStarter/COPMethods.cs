@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 namespace COPRefactoring
 {
     public class COPMethods
-	{
+    {
         // The challenge (turn Resharper off if you have it installed)
         // You can work individually, or in pairs if you prefer
         // This is terrible code. Your task is to make it better
@@ -15,22 +15,35 @@ namespace COPRefactoring
         // There are unit tests that already pass, you don't need to change these, just make sure they still pass when you're done.
         // When you're happy with your refactor, push your changes to a branch with your name and we'll review the changes in another session.
 
-        public ResultModel Analyse(string input)
+        public ResultModel Analyse(string input) => new ResultModel
         {
-            var result = new ResultModel();
+            TotalWords = GetTotalWords(input),
+            TotalLetters = GetTotalLetters(input),
+            TotalWordsWithMoreThanFiveLetters = GetTotalWordsWithMoreThanFiveLetters(input),
+            TotalCapitalLetters = GetTotalCapitalLetters(input),
+            WordsLastToFirst = GetWordsFirstToLast(input),
+            LetterOccurrences = GetLetterOccurences(input),
+            RepeatedWords = GetRepeatedWords(input),
+            CodedWord = GetCodedWord(input)
+        };
 
-            // Total words
-            var inputAsWordArray = input.Split(" ");
+        // Get total words
+        public int GetTotalWords(string input)
+        {
+            var inputAsWordArray = input.Split();
             var totalWords = 0;
             foreach (var word in inputAsWordArray)
             {
                 if (word.Length < 1) break;
                 totalWords = totalWords + 1;
             }
-            result.TotalWords = totalWords;
 
+            return totalWords;
+        }
 
-            // Total letters
+        // Get total letters
+        public int GetTotalLetters(string input)
+        {
             var regex = new Regex("[a-zA-Z]");
             var inputArray = input.ToCharArray();
             var totalLetters = 0;
@@ -39,17 +52,21 @@ namespace COPRefactoring
             {
                 if (regex.IsMatch(inputArray[i].ToString()))
                 {
-                    totalLetters = totalLetters + 1;
+                    totalLetters += 1;
                 }
             }
-            result.TotalLetters = totalLetters;
 
-            // TotalWordsWithMoreThanFiveLetters
+            return totalLetters;
+        }
+
+        // TotalWordsWithMoreThanFiveLetters
+        public int GetTotalWordsWithMoreThanFiveLetters(string input)
+        {
             var totalWordsWithMoreThanFiveLetters = 0;
-            for (var i = 0; i < inputAsWordArray.Length; i++)
+            for (var i = 0; i < input.Split().Length; i++)
             {
                 var notLetterRegex = new Regex("[^a-zA-Z]");
-                var strippedWord = notLetterRegex.Replace(inputAsWordArray[i], "");
+                var strippedWord = notLetterRegex.Replace(input.Split()[i], "");
 
                 var word = strippedWord.ToCharArray();
 
@@ -58,41 +75,50 @@ namespace COPRefactoring
                     totalWordsWithMoreThanFiveLetters++;
                 }
             }
-            result.TotalWordsWithMoreThanFiveLetters = totalWordsWithMoreThanFiveLetters;
 
+            return totalWordsWithMoreThanFiveLetters;
+        }
 
-
-
-
-            // TotalCapitalLetters
+        // TotalCapitalLetters
+        public int GetTotalCapitalLetters(string input)
+        {
             var upperCaseRegex = new Regex("[A-Z]");
             var totalUpperCaseLetters = 0;
-            foreach (var letter in inputArray)
+            foreach (var letter in input.ToCharArray())
             {
                 if (upperCaseRegex.IsMatch(letter.ToString()))
                 {
-                    totalUpperCaseLetters = totalUpperCaseLetters + 1;
+                    totalUpperCaseLetters += 1;
                 }
             }
 
-            result.TotalCapitalLetters = totalUpperCaseLetters;
+            return totalUpperCaseLetters;
+        }
 
-
-            // WordsFirstToLast
-            var reversedWordArray = new string[inputAsWordArray.Length];
-            for (var i = 1; i <= inputAsWordArray.Length; i++)
+        // WordsFirstToLast
+        public string GetWordsFirstToLast(string input)
+        {
+            var reversedWordArray = new string[input.Split().Length];
+            for (var i = 1; i <= input.Split().Length; i++)
             {
-                reversedWordArray[inputAsWordArray.Length - i] = inputAsWordArray[i-1];
+                reversedWordArray[input.Split().Length - i] = input.Split()[i - 1];
             }
+
             var reversedWordString = "";
+
             for (var i = 0; i < reversedWordArray.Length - 1; i++)
             {
                 reversedWordString += reversedWordArray[i] + " ";
             }
-            reversedWordString += reversedWordArray[reversedWordArray.Length - 1];
-            result.WordsLastToFirst = reversedWordString;
 
-            // LetterOccurrences
+            reversedWordString += reversedWordArray[reversedWordArray.Length - 1];
+
+            return reversedWordString;
+        }
+
+        // LetterOccurrences
+        public List<LetterOccurrence> GetLetterOccurences(string input)
+        {
             var letterOccurrences = new List<LetterOccurrence>();
             var alphabet = "abcdefghijklmnopqrstuvwxyz";
             for (var i = 0; i < alphabet.Length; i++)
@@ -104,7 +130,9 @@ namespace COPRefactoring
                 });
             }
 
-            foreach (var letter in inputArray)
+            var regex = new Regex("[a-zA-Z]");
+
+            foreach (var letter in input.ToCharArray())
             {
                 if (regex.IsMatch(letter.ToString()))
                 {
@@ -130,12 +158,15 @@ namespace COPRefactoring
                 }
             }
 
-            result.LetterOccurrences = letterOccurrences;
+            return letterOccurrences;
+        }
 
-            // RepeatedWords
+        // RepeatedWords
+        public List<RepeatedWord> GetRepeatedWords(string input)
+        {
             var repeatedWords = new List<RepeatedWord>();
             var punctuationRegex = new Regex("[.,!?:;\"']");
-            foreach (var word in inputAsWordArray)
+            foreach (var word in input.Split())
             {
                 var strippedWord = punctuationRegex.Replace(word, "");
                 var currentWord = repeatedWords.FirstOrDefault(_ => _.Word.Equals(strippedWord.ToLower()));
@@ -157,10 +188,13 @@ namespace COPRefactoring
                     });
                 }
             }
-            result.RepeatedWords = repeatedWords;
 
+            return repeatedWords;
+        }
 
-            // CodedWord
+        // CodedWord
+        public string GetCodedWord(string input)
+        {
             var numbers = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26";
             var alphabetString = "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z";
             var numbersAsArray = numbers.Split(",");
@@ -193,9 +227,7 @@ namespace COPRefactoring
                 }
             }
 
-            result.CodedWord = codeResult;
-
-            return result;
+            return codeResult;
         }
-	}
+    }
 }

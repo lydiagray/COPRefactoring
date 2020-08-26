@@ -7,3 +7,12 @@ C:\code\CoP\COPRefactoring\COPStarter\obj\Debug\netcoreapp3.1\COPRefactoring.Ass
 C:\code\CoP\COPRefactoring\COPStarter\obj\Debug\netcoreapp3.1\COPRefactoring.AssemblyInfo.cs
 C:\code\CoP\COPRefactoring\COPStarter\obj\Debug\netcoreapp3.1\COPRefactoring.dll
 C:\code\CoP\COPRefactoring\COPStarter\obj\Debug\netcoreapp3.1\COPRefactoring.pdb
+D:\code\COPRefactoring\COPStarter\bin\Debug\netcoreapp3.1\COPRefactoring.deps.json
+D:\code\COPRefactoring\COPStarter\bin\Debug\netcoreapp3.1\COPRefactoring.dll
+D:\code\COPRefactoring\COPStarter\bin\Debug\netcoreapp3.1\COPRefactoring.pdb
+D:\code\COPRefactoring\COPStarter\obj\Debug\netcoreapp3.1\COPRefactoring.csprojAssemblyReference.cache
+D:\code\COPRefactoring\COPStarter\obj\Debug\netcoreapp3.1\COPRefactoring.AssemblyInfoInputs.cache
+D:\code\COPRefactoring\COPStarter\obj\Debug\netcoreapp3.1\COPRefactoring.AssemblyInfo.cs
+D:\code\COPRefactoring\COPStarter\obj\Debug\netcoreapp3.1\COPRefactoring.csproj.CoreCompileInputs.cache
+D:\code\COPRefactoring\COPStarter\obj\Debug\netcoreapp3.1\COPRefactoring.dll
+D:\code\COPRefactoring\COPStarter\obj\Debug\netcoreapp3.1\COPRefactoring.pdb
