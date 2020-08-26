@@ -22,94 +22,47 @@ namespace COPRefactoring
             TotalWordsWithMoreThanFiveLetters = GetTotalWordsWithMoreThanFiveLetters(input),
             TotalCapitalLetters = GetTotalCapitalLetters(input),
             WordsLastToFirst = GetWordsFirstToLast(input),
-            LetterOccurrences = GetLetterOccurences(input),
+            LetterOccurrences = GetLetterOccurrences(input),
             RepeatedWords = GetRepeatedWords(input),
             CodedWord = GetCodedWord(input)
         };
 
         // Get total words
-        public int GetTotalWords(string input)
-        {
-            var inputAsWordArray = input.Split();
-            var totalWords = 0;
-            foreach (var word in inputAsWordArray)
-            {
-                if (word.Length < 1) break;
-                totalWords = totalWords + 1;
-            }
-
-            return totalWords;
-        }
+        private int GetTotalWords(string input) => input.Split().Count(word => word.Length > 1);
 
         // Get total letters
-        public int GetTotalLetters(string input)
-        {
-            var regex = new Regex("[a-zA-Z]");
-            var inputArray = input.ToCharArray();
-            var totalLetters = 0;
-
-            for (var i = 0; i < inputArray.Length; i++)
-            {
-                if (regex.IsMatch(inputArray[i].ToString()))
-                {
-                    totalLetters += 1;
-                }
-            }
-
-            return totalLetters;
-        }
+        private int GetTotalLetters(string input) => input.ToCharArray().Count(letter => new Regex("[a-zA-Z]").IsMatch(letter.ToString()));
 
         // TotalWordsWithMoreThanFiveLetters
-        public int GetTotalWordsWithMoreThanFiveLetters(string input)
+        private int GetTotalWordsWithMoreThanFiveLetters(string input)
         {
             var totalWordsWithMoreThanFiveLetters = 0;
             for (var i = 0; i < input.Split().Length; i++)
             {
                 var notLetterRegex = new Regex("[^a-zA-Z]");
-                var strippedWord = notLetterRegex.Replace(input.Split()[i], "");
+                var strippedWord = notLetterRegex.Replace(input.Split()[i], "").ToCharArray();
 
-                var word = strippedWord.ToCharArray();
-
-                if (word.Length > 5)
-                {
+                if (strippedWord.Length > 5)
                     totalWordsWithMoreThanFiveLetters++;
-                }
             }
 
             return totalWordsWithMoreThanFiveLetters;
         }
 
         // TotalCapitalLetters
-        public int GetTotalCapitalLetters(string input)
-        {
-            var upperCaseRegex = new Regex("[A-Z]");
-            var totalUpperCaseLetters = 0;
-            foreach (var letter in input.ToCharArray())
-            {
-                if (upperCaseRegex.IsMatch(letter.ToString()))
-                {
-                    totalUpperCaseLetters += 1;
-                }
-            }
-
-            return totalUpperCaseLetters;
-        }
+        private int GetTotalCapitalLetters(string input) => input.ToCharArray().Count(letter => new Regex("[A-Z]").IsMatch(letter.ToString()));
 
         // WordsFirstToLast
-        public string GetWordsFirstToLast(string input)
+        private string GetWordsFirstToLast(string input)
         {
             var reversedWordArray = new string[input.Split().Length];
             for (var i = 1; i <= input.Split().Length; i++)
-            {
                 reversedWordArray[input.Split().Length - i] = input.Split()[i - 1];
-            }
 
             var reversedWordString = "";
 
             for (var i = 0; i < reversedWordArray.Length - 1; i++)
-            {
                 reversedWordString += reversedWordArray[i] + " ";
-            }
 
             reversedWordString += reversedWordArray[reversedWordArray.Length - 1];
 
@@ -117,44 +70,32 @@ namespace COPRefactoring
         }
 
         // LetterOccurrences
-        public List<LetterOccurrence> GetLetterOccurences(string input)
+        private List<LetterOccurrence> GetLetterOccurrences(string input)
         {
-            var letterOccurrences = new List<LetterOccurrence>();
             var alphabet = "abcdefghijklmnopqrstuvwxyz";
-            for (var i = 0; i < alphabet.Length; i++)
-            {
-                letterOccurrences.Add(new LetterOccurrence
-                {
-                    Letter = alphabet[i].ToString(),
-                    Frequency = 0
-                });
-            }
-
-            var regex = new Regex("[a-zA-Z]");
+            var letterOccurrences = alphabet.Select(letter => new LetterOccurrence {Letter = letter.ToString(), Frequency = 0}).ToList();
 
             foreach (var letter in input.ToCharArray())
             {
-                if (regex.IsMatch(letter.ToString()))
-                {
-                    var currentLetter = letterOccurrences.FirstOrDefault(_ => _.Letter.Equals(letter.ToString().ToLower()));
-                    if (currentLetter == null)
-                    {
-                        letterOccurrences.Add(new LetterOccurrence
-                        {
-                            Letter = letter.ToString().ToLower(),
-                            Frequency = 1
-                        });
+                if (!new Regex("[a-zA-Z]").IsMatch(letter.ToString())) continue;
 
-                    }
-                    else
+                var currentLetter = letterOccurrences.FirstOrDefault(_ => _.Letter.Equals(letter.ToString().ToLower()));
+                if (currentLetter == null)
+                {
+                    letterOccurrences.Add(new LetterOccurrence
                     {
-                        letterOccurrences.Remove(currentLetter);
-                        letterOccurrences.Add(new LetterOccurrence
-                        {
-                            Letter = currentLetter.Letter,
-                            Frequency = currentLetter.Frequency + 1
-                        });
-                    }
+                        Letter = letter.ToString().ToLower(),
+                        Frequency = 1
+                    });
+                }
+                else
+                {
+                    letterOccurrences.Remove(currentLetter);
+                    letterOccurrences.Add(new LetterOccurrence
+                    {
+                        Letter = currentLetter.Letter,
+                        Frequency = currentLetter.Frequency + 1
+                    });
                 }
             }
 
@@ -162,13 +103,13 @@ namespace COPRefactoring
         }
 
         // RepeatedWords
-        public List<RepeatedWord> GetRepeatedWords(string input)
+        private List<RepeatedWord> GetRepeatedWords(string input)
         {
             var repeatedWords = new List<RepeatedWord>();
-            var punctuationRegex = new Regex("[.,!?:;\"']");
+
             foreach (var word in input.Split())
             {
-                var strippedWord = punctuationRegex.Replace(word, "");
+                var strippedWord = new Regex("[.,!?:;\"']").Replace(word, string.Empty);
                 var currentWord = repeatedWords.FirstOrDefault(_ => _.Word.Equals(strippedWord.ToLower()));
                 if (currentWord == null)
                 {
@@ -193,13 +134,14 @@ namespace COPRefactoring
         }
 
         // CodedWord
-        public string GetCodedWord(string input)
+        private string GetCodedWord(string input)
         {
             var numbers = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26";
             var alphabetString = "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z";
             var numbersAsArray = numbers.Split(",");
             var alphabetAsArray = alphabetString.Split(",");
             var code = new Dictionary<string, int>();
+
             foreach (var number in numbersAsArray)
             {
                 var numberAsInt = int.Parse(number);
@@ -209,21 +151,18 @@ namespace COPRefactoring
             var inputAsCharArray = input.ToLower().ToCharArray();
             var codeResult = "";
             var alphabetRegex = new Regex("[a-zA-Z]");
+
             foreach (var character in inputAsCharArray)
             {
-                if (alphabetRegex.IsMatch(character.ToString()))
+                if (!alphabetRegex.IsMatch(character.ToString()))
+                    codeResult += character.ToString();
+
+                foreach (var pair in code)
                 {
-                    foreach (var pair in code)
+                    if (pair.Key.Equals(character.ToString()))
                     {
-                        if (pair.Key.Equals(character.ToString()))
-                        {
-                            codeResult = codeResult + pair.Value.ToString();
-                        }
+                        codeResult += pair.Value.ToString();
                     }
-                }
-                else
-                {
-                    codeResult = codeResult + character.ToString();
                 }
             }
 
