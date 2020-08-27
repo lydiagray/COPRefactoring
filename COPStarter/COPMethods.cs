@@ -28,45 +28,30 @@ namespace COPRefactoring
         };
 
         // Get total words
-        private int GetTotalWords(string input) => input.Split().Count(word => word.Length > 1);
+        private int GetTotalWords(string input)
+            => input.Split().Count(word => word.Length > 1);
 
         // Get total letters
-        private int GetTotalLetters(string input) => input.ToCharArray().Count(letter => new Regex("[a-zA-Z]").IsMatch(letter.ToString()));
+        private int GetTotalLetters(string input)
+            => input.ToCharArray().Count(letter => new Regex("[a-zA-Z]").IsMatch(letter.ToString()));
 
         // TotalWordsWithMoreThanFiveLetters
         private int GetTotalWordsWithMoreThanFiveLetters(string input)
-        {
-            var totalWordsWithMoreThanFiveLetters = 0;
-            for (var i = 0; i < input.Split().Length; i++)
-            {
-                var notLetterRegex = new Regex("[^a-zA-Z]");
-                var strippedWord = notLetterRegex.Replace(input.Split()[i], "").ToCharArray();
-
-                if (strippedWord.Length > 5)
-                    totalWordsWithMoreThanFiveLetters++;
-            }
-
-            return totalWordsWithMoreThanFiveLetters;
-        }
+            => input.Split().Count(nonLetter => new Regex("[^a-zA-Z]").Replace(nonLetter, string.Empty).ToCharArray().Length > 5);
 
         // TotalCapitalLetters
-        private int GetTotalCapitalLetters(string input) => input.ToCharArray().Count(letter => new Regex("[A-Z]").IsMatch(letter.ToString()));
+        private int GetTotalCapitalLetters(string input)
+            => input.ToCharArray().Count(letter => new Regex("[A-Z]").IsMatch(letter.ToString()));
 
         // WordsFirstToLast
         private string GetWordsFirstToLast(string input)
         {
-            var reversedWordArray = new string[input.Split().Length];
+            var reversedWordArray = new string[input.Split().Length].ToList();
+
             for (var i = 1; i <= input.Split().Length; i++)
                 reversedWordArray[input.Split().Length - i] = input.Split()[i - 1];
 
-            var reversedWordString = "";
-
-            for (var i = 0; i < reversedWordArray.Length - 1; i++)
-                reversedWordString += reversedWordArray[i] + " ";
-
-            reversedWordString += reversedWordArray[reversedWordArray.Length - 1];
-
-            return reversedWordString;
+            return reversedWordArray.Aggregate(string.Empty, (current, tst) => current + (tst + " ")).TrimEnd();
         }
 
         // LetterOccurrences
@@ -75,28 +60,18 @@ namespace COPRefactoring
             var alphabet = "abcdefghijklmnopqrstuvwxyz";
             var letterOccurrences = alphabet.Select(letter => new LetterOccurrence {Letter = letter.ToString(), Frequency = 0}).ToList();
 
-            foreach (var letter in input.ToCharArray())
+            foreach (var letter in input.ToCharArray().Where(letter => new Regex("[a-zA-Z]").IsMatch(letter.ToString())))
             {
-                if (!new Regex("[a-zA-Z]").IsMatch(letter.ToString())) continue;
-
                 var currentLetter = letterOccurrences.FirstOrDefault(_ => _.Letter.Equals(letter.ToString().ToLower()));
-                if (currentLetter == null)
+
+                if (currentLetter == null) continue;
+
+                letterOccurrences.Remove(currentLetter);
+                letterOccurrences.Add(new LetterOccurrence
                 {
-                    letterOccurrences.Add(new LetterOccurrence
-                    {
-                        Letter = letter.ToString().ToLower(),
-                        Frequency = 1
-                    });
-                }
-                else
-                {
-                    letterOccurrences.Remove(currentLetter);
-                    letterOccurrences.Add(new LetterOccurrence
-                    {
-                        Letter = currentLetter.Letter,
-                        Frequency = currentLetter.Frequency + 1
-                    });
-                }
+                    Letter = currentLetter.Letter,
+                    Frequency = currentLetter.Frequency + 1
+                });
             }
 
             return letterOccurrences;
